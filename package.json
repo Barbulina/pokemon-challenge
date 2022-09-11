@@ -6,10 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "test": "jest --watch",
     "test:ci": "jest --ci",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src",
+    "format": "prettier -w pages src"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}?(x)": [
+      "npm run lint --fix",
+      "npm run format"
+    ]
   },
   "dependencies": {
     "i18next": "^21.9.1",
@@ -23,15 +31,26 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "@types/jest": "^29.0.1",
     "@types/node": "18.7.16",
     "@types/react": "18.0.18",
     "@types/react-dom": "18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "axios": "^0.27.2",
     "eslint": "8.23.0",
     "eslint-config-next": "12.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^3.3.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.0.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.0",
+    "eslint-plugin-testing-library": "^5.6.3",
     "husky": "^8.0.1",
-    "jest": "^29.0.2",
+    "jest": "^29.0.3",
     "jest-environment-jsdom": "^29.0.2",
+    "lint-staged": "^13.0.3",
     "typescript": "4.8.3"
   }
 }

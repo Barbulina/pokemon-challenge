@@ -1,13 +1,16 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:prettier/recommended",
+    "next/core-web-vitals",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -20,8 +23,157 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "testing-library",
+    "jest"
   ],
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          [
+            "test",
+            "./test"
+          ]
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    }
+  },
   "rules": {
+    // General
+    "no-console": 2, // disallow use of console
+    "comma-dangle": [
+      1,
+      "always-multiline"
+    ], // allow or disallow trailing commas
+    "no-cond-assign": 2, // disallow assignment in conditional expressions
+    "no-const-assign": 2, // disallow assignment to const-declared variables
+    "no-constant-condition": 2, // disallow use of constant expressions in conditions
+    "no-control-regex": 1, // disallow control characters in regular expressions
+    "no-debugger": 2, // disallow use of debugger
+    "no-dupe-class-members": 2, // Disallow duplicate name in class members
+    "no-dupe-keys": 2, // disallow duplicate keys when creating object literals
+    "no-empty": 2, // disallow empty statements
+    "no-ex-assign": 1, // disallow assigning to the exception in a catch block
+    "no-extra-boolean-cast": 1, // disallow double-negation boolean casts in a boolean context
+    "no-extra-semi": 2, // disallow unnecessary semicolons
+    "no-func-assign": 2, // disallow overwriting functions written as function declarations
+    "no-inner-declarations": 2, // disallow function or variable declarations in nested blocks
+    "no-invalid-regexp": 2, // disallow invalid regular expression strings in the RegExp constructor
+    "no-negated-in-lhs": 2, // disallow negation of the left operand of an in expression
+    "no-obj-calls": 2, // disallow the use of object properties of the global object (Math and JSON) as functions
+    "no-regex-spaces": 2, // disallow multiple spaces in a regular expression literal
+    "no-sparse-arrays": 2, // disallow sparse arrays
+    "no-unreachable": 2, // disallow unreachable statements after a return, throw, continue, or break statement
+    "use-isnan": 2, // disallow comparisons with the value NaN
+    "valid-typeof": 2, // Ensure that the results of typeof are compared against a valid string
+    // Best Practices
+    // These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
+    "block-scoped-var": 2, // treat var statements as if they were block scoped (off by default)
+    "complexity": 0, // specify the maximum cyclomatic complexity allowed in a program (off by default)
+    "curly": 0, // specify curly brace conventions for all control statements
+    "dot-notation": 1, // encourages use of dot notation whenever possible
+    "eqeqeq": [
+      2,
+      "allow-null"
+    ], // require the use of === and !==
+    "guard-for-in": 1, // make sure for-in loops have an if statement (off by default)
+    "no-alert": 2, // disallow the use of alert, confirm, and prompt
+    "no-caller": 2, // disallow use of arguments.caller or arguments.callee
+    "no-div-regex": 1, // disallow division operators explicitly at beginning of regular expression (off by default)
+    "no-else-return": 2, // disallow else after a return in an if (off by default)
+    "no-eq-null": 0, // disallow comparisons to null without a type-checking operator (off by default)
+    "no-eval": 2, // disallow use of eval()
+    "no-extend-native": 2, // disallow adding to native types
+    "no-extra-bind": 1, // disallow unnecessary function binding
+    "no-fallthrough": 2, // disallow fallthrough of case statements
+    "no-floating-decimal": 2, // disallow the use of leading or trailing decimal points in numeric literals (off by default)
+    "no-implied-eval": 2, // disallow use of eval()-like methods
+    "no-labels": 2, // disallow use of labeled statements
+    "no-iterator": 2, // disallow usage of __iterator__ property
+    "no-lone-blocks": 2, // disallow unnecessary nested blocks
+    "no-loop-func": 2, // disallow creation of functions within loops
+    "no-multi-str": 2, // disallow use of multiline strings
+    "no-native-reassign": 2, // disallow reassignments of native objects
+    "no-new": 2, // disallow use of new operator when not part of the assignment or comparison
+    "no-new-func": 2, // disallow use of new operator for Function object
+    "no-new-wrappers": 2, // disallows creating new instances of String,Number, and Boolean
+    "no-octal": 1, // disallow use of octal literals
+    "no-octal-escape": 1, // disallow use of octal escape sequences in string literals, such as var foo = "Copyright \251";
+    "no-proto": 2, // disallow usage of __proto__ property
+    "no-redeclare": 2, // disallow declaring the same variable more than once
+    "no-return-assign": 2, // disallow use of assignment in return statement
+    "no-script-url": 2, // disallow use of javascript: urls.
+    "no-self-compare": 2, // disallow comparisons where both sides are exactly the same (off by default)
+    "no-sequences": 2, // disallow use of comma operator
+    "no-unused-expressions": 2, // disallow usage of expressions in statement position
+    "no-void": 2, // disallow use of void operator (off by default)
+    "no-warning-comments": 2, // disallow usage of configurable warning terms in comments": 1,                        // e.g. TODO or FIXME (off by default)
+    "no-with": 2, // disallow use of the with statement
+    "radix": 1, // require use of the second argument for parseInt() (off by default)
+    "semi-spacing": 0, // require a space after a semi-colon
+    "vars-on-top": 2, // requires to declare all vars on top of their containing scope (off by default)
+    "wrap-iife": 2, // require immediate function invocation to be wrapped in parentheses (off by default)
+    "yoda": 2, // require or disallow Yoda conditions
+    "no-restricted-imports": [
+      2,
+      {
+        "patterns": [
+          "../../**"
+        ]
+      }
+    ],
+    // Variables
+    // These rules have to do with variable declarations.
+    "no-catch-shadow": 2, // disallow the catch clause parameter name being the same as a variable in the outer scope (off by default in the node environment)
+    "no-delete-var": 2, // disallow deletion of variables
+    "no-label-var": 2, // disallow labels that share a name with a variable
+    "no-shadow-restricted-names": 2, // disallow shadowing of names such as arguments
+    "no-undef": 2, // disallow use of undeclared variables unless mentioned in a /*global */ block
+    "no-undef-init": 2, // disallow use of undefined when initializing variables
+    "no-use-before-define": 2, // disallow use of variables before they are defined
+    // React Plugin
+    // The following rules are made available via `eslint-plugin-react`.
+    "react/display-name": 2,
+    "react/jsx-boolean-value": 0,
+    "react/jsx-fragments": 2,
+    "react/jsx-no-comment-textnodes": 2,
+    "react/jsx-no-duplicate-props": 2,
+    "react/no-multi-comp": [
+      2,
+      {
+        "ignoreStateless": true
+      }
+    ],
+    "react/no-string-refs": 2,
+    "react/no-unknown-property": 0,
+    "react/self-closing-comp": 1,
+    // React Hooks
+    "react-hooks/exhaustive-deps": 1,
+    // Typescript
+    "@typescript-eslint/no-unused-vars": 2, // disallow declaration of variables that are not used in the code, disabled due to rule to eslint-plugin-typescript/no-unused-vars
+    "@typescript-eslint/no-shadow": 2, // disallow declaration of variables already declared in the outer scope
+    // Jest Plugin
+    // The following rules are made available via `eslint-plugin-jest`.
+    "jest/no-disabled-tests": 2,
+    "jest/no-focused-tests": 2,
+    "jest/no-identical-title": 1,
+    "jest/valid-expect": 2
+  },
+  "globals": {
+    "React": true,
+    "JSX": true,
+    "jest": true,
+    "describe": true,
+    "it": true,
+    "expect": true,
+    "afterEach": true,
+    "afterAll": true,
+    "beforeEach": true,
+    "beforeAll": true
   }
 }
